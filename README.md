@@ -1,4 +1,4 @@
-# 프로젝트명:🚶‍♂️ A-eye Voice Guidance System
+# 프로젝트명: # 🚶‍♂️ A-eye Voice Guidance System 👀
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
