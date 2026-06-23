@@ -1,1 +1,100 @@
-# 26-1-OSS-Project-team-19
+# 프로젝트명:🚶‍♂️ A-eye Voice Guidance System
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![YOLOv8](https://img.shields.io/badge/YOLO-v8-blue.svg)](https://github.com/ultralytics/ultralytics)
+
+> **"시각장애인의 안전한 보행을 위한 스마트 음성 보조 시스템"**  
+> 보행로 환경의 비정형 장애물을 실시간으로 탐지하고, 객체의 방향과 위험도를 분석하여 시각장애인에게 직관적인 음성과 경고음으로 안내합니다.
+
+## 📖 목차
+1. [프로젝트 배경](#1-프로젝트-배경)
+2. [프로젝트 목적](#2-프로젝트-목적)
+3. [프로젝트 설명](#3-프로젝트-설명)
+4. [프로젝트 결과](#4-프로젝트-결과)
+5. [프로젝트 설치 및 실행 방법](#5-프로젝트-설치-및-실행-방법)
+6. [사용 툴](#6-사용-툴)
+7. [팀원](#7-팀원)
+8. [라이센스](#8-라이센스)
+
+---
+
+## 1. 프로젝트 배경
+시각장애인은 보행 중 전동 킥보드, 볼라드, 입간판 등 비정형 장애물로 인해 많은 위험에 노출됩니다. 단순한 지팡이나 점자 블록만으로는 변화하는 주변 상황(접근하는 사람, 불법 주차된 차량 등)을 실시간으로 파악하기 어렵습니다. 이에 따라 **카메라 비전 기술을 활용해 실시간으로 보행로의 위험 요소를 파악하고 음성으로 즉각적인 피드백을 줄 수 있는 보조 시스템**의 필요성이 대두되었습니다.
+
+## 2. 프로젝트 목적
+본 프로젝트의 목적은 **시각장애인의 안전한 보행을 지원하기 위해 객체 탐지 기술과 음성 안내 기능을 결합한 서비스를 구현**하는 것입니다. 단순히 장애물이 "있다"는 사실을 넘어, 장애물이 **어느 방향**에 있는지, 그리고 **얼마나 위험한 위치(거리)**에 있는지를 판단하여 사용자에게 직관적이고 이해하기 쉬운 음성과 경고음으로 전달하는 것을 목표로 합니다.
+
+## 3. 프로젝트 설명
+사용자의 웹캠 또는 주행 영상을 실시간으로 분석하여 보행에 위협이 되는 4가지 주요 객체(`사람`, `자동차`, `오토바이`, `바닥 장애물`)를 탐지하고 안내합니다.
+
+* **👁️ 객체 탐지 로직 (YOLOv8)**
+  - 입력된 프레임에서 신뢰도(Confidence) **0.25 이상**의 객체만 유의미한 장애물로 판별합니다.
+* **🧭 방향 판단 알고리즘**
+  - 바운딩 박스의 중심 좌표(`x_center`)를 활용해 화면을 3등분하여 방향을 직관적으로 안내합니다.
+  - **11시 방향:** 화면 좌측 33% 이내
+  - **정면:** 화면 중앙 33% ~ 66%
+  - **1시 방향:** 화면 우측 66% 이상
+* **⚠️ 위험도 판단 알고리즘 (Zone 1 & Zone 2)**
+  - 객체가 가까워질수록 바운딩 박스의 하단 좌표(`y2`)가 화면 아래쪽으로 내려오는 특징을 활용합니다.
+  - **Zone 1 (주의 구간):** `y2` 좌표가 화면 높이의 80% 이하일 때 (예: *"정면에 사람이 있습니다."*)
+  - **Zone 2 (위험 구간):** `y2` 좌표가 화면 높이의 80%를 초과하여 객체가 매우 가까워졌을 때 (예: *[비프음 발생] "위험. 정면 사람"*)
+* **🔇 음성 및 경고 제어 (Cooldown)**
+  - `pyttsx3` 모듈을 매번 초기화하여 엔진 충돌을 방지합니다.
+  - 동일 객체에 대해 **3초(COOLDOWN)** 이내에는 중복 안내를 하지 않도록 하여 사용자의 피로도를 낮췄습니다.
+
+## 4. 프로젝트 결과
+* **데이터셋 구축:** 실제 인도 보행 영상을 바탕으로 **385장**의 원본 프레임을 추출하고, `labelImg`를 통한 라벨링 및 `Roboflow`를 이용한 데이터 증강(Flip, Brightness 조절 등)을 거쳐 총 **790장**의 학습 데이터(Train Set)를 확보했습니다.
+* **성능 및 한계점:**
+  * 주간 및 일반적인 보행 환경에서는 높은 탐지율을 보입니다.
+  * 자동차(55.6%) 등 특정 객체에 데이터가 편중되는 클래스 불균형 문제가 일부 존재합니다.
+  * ~~야간이나 비 오는 날 등 조도 변화가 극심한 엣지 케이스(Edge Case)에 대한 추가 데이터 수집이 필요합니다.~~ (향후 개선 과제)
+
+## 5. 프로젝트 설치 및 실행 방법
+
+### 📌 요구 사항 (Prerequisites)
+- Python 3.8+
+
+- ?
+
+## 6. 사용 툴
+| 분야 | 기술 및 도구 |
+| :--- | :--- |
+| **Language** | `Python` |
+| **Object Detection** | `Ultralytics YOLOv8`, `OpenCV` |
+| **Voice / Audio** | `pyttsx3`, `pygame` |
+| **Data Processing** | `Google Colab`, `labelImg`, `Roboflow` |
+| **Environment** | `VS Code`, `Anaconda` |
+
+## 7. 팀원 
+
+### 👥 팀원
+* **박채희** 
+* **이유민** 
+* **현진서** 
+
+## 8. 라이센스
+This project is licensed under the MIT License.
+
+> MIT License
+> 
+> Copyright (c) 2026 Chaehee Park, Yumin Lee, Jinseo Hyun
+> 
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+> 
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
