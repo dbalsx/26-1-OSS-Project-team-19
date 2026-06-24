@@ -4,8 +4,7 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![YOLOv8](https://img.shields.io/badge/YOLO-v8-blue.svg)](https://github.com/ultralytics/ultralytics)
 
-> **"시각장애인의 안전한 보행을 위한 스마트 음성 보조 시스템"**  
-> 보행로 환경의 비정형 장애물을 실시간으로 탐지하고, 객체의 방향과 위험도를 분석하여 시각장애인에게 직관적인 음성과 경고음으로 안내합니다.
+> **"시각장애인의 안전한 보행을 위한 스마트 음성 보조 시스템"** > 보행로 환경의 비정형 장애물을 실시간으로 탐지하고, 객체의 방향과 위험도를 분석하여 시각장애인에게 직관적인 음성과 경고음으로 안내합니다.
 
 ## 📖 목차
 1. [프로젝트 배경](#1-프로젝트-배경)
@@ -26,8 +25,11 @@
 본 프로젝트의 목적은 **시각장애인의 안전한 보행을 지원하기 위해 객체 탐지 기술과 음성 안내 기능을 결합한 서비스를 구현**하는 것입니다. 단순히 장애물이 "있다"는 사실을 넘어, 장애물이 **어느 방향**에 있는지, 그리고 얼마나 위험한 위치(거리)에 있는지를 판단하여 사용자에게 직관적이고 이해하기 쉬운 음성과 경고음으로 전달하는 것을 목표로 합니다.
 
 ## 3. 프로젝트 설명
-사용자의 웹캠 또는 주행 영상을 실시간으로 분석하여 보행에 위협이 되는 4가지 주요 객체(`사람`, `자동차`, `오토바이`, `바닥 장애물`)를 탐지하고 안내합니다.
+웹 기반 대시보드를 통해 주행 영상을 실시간으로 분석하며, 보행에 위협이 되는 4가지 주요 객체(`사람`, `자동차`, `오토바이`, `바닥 장애물`)를 탐지하고 안내합니다.
 
+* **💻 웹 기반 사용자 인터페이스 (Streamlit)**
+  - 사용자가 시연 영상을 직접 선택하고 분석을 제어할 수 있는 직관적인 웹 화면을 제공합니다.
+  - 객체 탐지 결과와 방향 안내 로그를 화면 우측에서 실시간 텍스트로 확인할 수 있습니다.
 * **👁️ 객체 탐지 로직 (YOLOv8)**
   - 입력된 프레임에서 신뢰도(Confidence) **0.25 이상**의 객체만 유의미한 장애물로 판별합니다.
 * **🧭 방향 판단 알고리즘**
@@ -40,8 +42,8 @@
   - **Zone 1 (주의 구간):** `y2` 좌표가 화면 높이의 80% 이하일 때 (예: *"정면에 사람이 있습니다."*)
   - **Zone 2 (위험 구간):** `y2` 좌표가 화면 높이의 80%를 초과하여 객체가 매우 가까워졌을 때 (예: *[비프음 발생] "위험. 정면 사람"*)
 * **🔇 음성 및 경고 제어 (Cooldown)**
-  - `pyttsx3` 모듈을 매번 초기화하여 엔진 충돌을 방지합니다.
-  - 동일 객체에 대해 **3초(COOLDOWN)** 이내에는 중복 안내를 하지 않도록 하여 사용자의 피로도를 낮췄습니다.
+  - 비동기 처리 및 `pyttsx3` 모듈 최적화를 통해 엔진 충돌을 방지합니다.
+  - 동일 객체에 대해 **4초(COOLDOWN)** 이내에는 중복 안내를 하지 않도록 하여 사용자의 피로도를 낮췄습니다.
 
 ## 4. 프로젝트 결과
 * **데이터셋 구축:** 실제 인도 보행 영상을 바탕으로 **385장**의 원본 프레임을 추출하고, `labelImg`, `Roboflow` 를 통한 라벨링 및 데이터 증강(Flip, Brightness 조절 등)을 거쳐 총 **790장**의 학습 데이터(Train Set)를 확보했습니다.
@@ -54,47 +56,5 @@
 
 1. 가장 먼저 컴퓨터에 파이썬(Python) 3.8 이상의 버전이 설치되어 있는지 확인한 후, 터미널(명령 프롬프트)을 열고 `git clone https://github.com/사용자계정/A-eye-Voice-Guidance.git` 명령어를 입력하여 깃허브 저장소의 파일을 다운로드합니다.
 2. 다운로드가 완료되면 `cd A-eye-Voice-Guidance` 명령어를 입력하여 다운로드된 프로젝트 폴더 내부로 이동합니다.
-3. 프로젝트 구동에 필요한 인공지능 및 제어 패키지들을 한 번에 설치하기 위해 터미널에 `pip install -r requirements.txt` 명령어를 입력합니다.
-4. 설치가 끝나고 필수 파일(`best.pt`, `beep.wav` 등)이 폴더 내에 잘 존재하는지 확인한 후, 웹캠이 컴퓨터에 연결된 상태에서 `python main.py` 명령어를 입력하여 보행 보조 시스템을 실행합니다. (만약 실시간 웹캠 화면이 아니라 프로젝트 내에 있는 주행 영상 파일로 테스트해 보고 싶으시다면, 코드 내에서 `USE_WEBCAM = False`로 설정만 변경한 뒤 똑같이 실행해 주시면 됩니다.)
-
-## 6. 사용 툴
-| 분야 | 기술 및 도구 |
-| :--- | :--- |
-| **Language** | `Python` |
-| **Object Detection** | `Ultralytics YOLOv8`, `OpenCV` |
-| **Voice / Audio** | `pyttsx3`, `pygame` |
-| **Data Processing** | `Google Colab`, `labelImg`, `Roboflow` |
-| **Environment** | `VS Code`, `Anaconda` |
-
-## 7. 팀원 
-
-### 👥 팀원
-* **인공지능공학부 2515863 박채희** 
-* **인공지능공학부 2513890 이유민** 
-* **인공지능공학부 2516801 현진서** 
-
-## 8. 라이센스
-This project is licensed under the MIT License.
-
-> MIT License
-> 
-> Copyright (c) 2026 Chaehee Park, Yumin Lee, Jinseo Hyun
-> 
-> Permission is hereby granted, free of charge, to any person obtaining a copy
-> of this software and associated documentation files (the "Software"), to deal
-> in the Software without restriction, including without limitation the rights
-> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-> copies of the Software, and to permit persons to whom the Software is
-> furnished to do so, subject to the following conditions:
-> 
-> The above copyright notice and this permission notice shall be included in all
-> copies or substantial portions of the Software.
-> 
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> SOFTWARE.
-
+3. 프로젝트 구동에 필요한 인공지능 및 웹 서비스 패키지들을 한 번에 설치하기 위해 터미널에 `pip install -r requirements.txt` 명령어를 입력합니다.
+4. 설치가 끝나고 필수 파일(`best.pt` 모델 가중치 파일 및 `test_video.mp4` 등 시연 영상)이 폴더 내에 잘 존재하는지 확인한 후, 터미널에 `streamlit run app.py` 명령어를 입력하여 보행 보조 시스템을 실행합니다. 명령어를 입력하면 자동으로 웹 브라우저가 열리며 시스템에 접속되어 바로 시연을 진행할 수 있습니다.
