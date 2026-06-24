@@ -1,5 +1,0 @@
-streamlit
-ultralytics
-opencv-python
-pygame
-pyttsx3
