@@ -5,6 +5,7 @@
 [![YOLOv8](https://img.shields.io/badge/YOLO-v8-blue.svg)](https://github.com/ultralytics/ultralytics)
 
 > **"시각장애인의 안전한 보행을 위한 스마트 음성 보조 시스템"**
+> 
 > 보행로 환경의 비정형 장애물을 실시간으로 탐지하고, 객체의 방향과 위험도를 분석하여 시각장애인에게 직관적인 음성과 경고음으로 안내합니다.
 
 ## 📖 목차
