@@ -59,3 +59,45 @@
 3. ([시연 영상 다운로드 링크](https://drive.google.com/drive/folders/18qQMF5IwNNjjHFnWQ2mlExTEVLsZ2tuV?usp=drive_link))에서 테스트 영상을 다운로드하여 프로젝트 루트 폴더(app.py가 있는 위치)에 넣어줍니다.
 4. 프로젝트 구동에 필요한 인공지능 및 웹 서비스 패키지들을 한 번에 설치하기 위해 터미널에 `pip install -r requirements.txt` 명령어를 입력합니다.
 5. 설치가 끝나고 필수 파일(`best.pt` 모델 가중치 파일 및 다운로드한 시연 영상)이 폴더 내에 잘 존재하는지 확인한 후, 터미널에 `streamlit run app.py` 명령어를 입력하여 보행 보조 시스템을 실행합니다. 명령어를 입력하면 자동으로 웹 브라우저가 열리며 시스템에 접속되어 바로 시연을 진행할 수 있습니다.
+
+## 6. 사용 툴
+| 분야 | 기술 및 도구 |
+| :--- | :--- |
+| **Language** | `Python` |
+| **Web / UI** | `Streamlit` |
+| **Object Detection** | `Ultralytics YOLOv8`, `OpenCV` |
+| **Voice / Audio** | `pyttsx3`, `pygame` |
+| **Data Processing** | `Google Colab`, `labelImg`, `Roboflow` |
+| **Environment** | `VS Code`, `Anaconda` |
+
+## 7. 팀원 
+
+### 👥 팀원
+* **인공지능공학부 2515863 박채희** *
+* **인공지능공학부 2513890 이유민** *
+* **인공지능공학부 2516801 현진서** *
+
+## 8. 라이센스
+This project is licensed under the MIT License.
+
+> MIT License
+> 
+> Copyright (c) 2026 Chaehee Park, Yumin Lee, Jinseo Hyun
+> 
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+> 
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
